@@ -1,0 +1,52 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+  redis:
+    image: 'redis:latest'
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3050:80'                   # map port 3050 to 80
+    depends_on:
+      - api
+      - client
+  api:                              # changed server to api as server is an nginx keyword
+    build:
+      context: ./server             # Directory for build files
+      dockerfile: Dockerfile.dev    
+    volumes:
+      - /home/node/app/node_modules # Don't override or redirect
+      - ./server:/home/node/app     # Everything in ./server should be shared with /home/node/app inside the container
+    environment:
+      - REDIS_HOST=redis            # Name of the Redis server ( taken from compose file )
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  client:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules # Don't override or redirect
+      - ./client:/home/node/app     # Everything in ./client should be shared with /home/node/app inside the container
+  worker:
+    stdin_open: true
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules # Don't override or redirect
+      - ./worker:/home/node/app     # Everything in ./worker should be shared with /home/node/app inside the container
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
