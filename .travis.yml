@@ -10,10 +10,10 @@ script:
   - docker run -e CI=true ozekidesu/react-test npm test
 
 after_success:
-  - docker build -t ozekidesu/multi-client -f ./client # Don't have to specify the docker filename as Dockerfile is the default
-  - docker build -t ozekidesu/multi-nginx -f ./nginx 
-  - docker build -t ozekidesu/multi-server -f ./server
-  - docker build -t ozekidesu/multi-worker -f ./worker
+  - docker build -t ozekidesu/multi-client ./client # Don't have to specify the docker filename as Dockerfile is the default
+  - docker build -t ozekidesu/multi-nginx ./nginx 
+  - docker build -t ozekidesu/multi-server ./server
+  - docker build -t ozekidesu/multi-worker ./worker
 
 # Log in to the docker CLI
 # Configure username and password variables in Travis
