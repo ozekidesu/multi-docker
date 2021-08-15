@@ -23,3 +23,15 @@ after_success:
   - docker push ozekidesu/multi-nginx
   - docker push ozekidesu/multi-server
   - docker push ozekidesu/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"                                              # Elastic Beanstalk Url Region
+  app: "multi-docker"                                              # Elastic Beanstalk Application Name
+  env: "Multidocker-env"                                           # Elastic Beanstalk Environments
+  bucket_name: "elasticbeanstalk-us-east-1-624566963215"           # S3 Bucket created by Elastic Beanstalk
+  bucket_path: "docker-multi"                                      # Will match the app name
+  on:
+    branch: master                                                 # Only deploy when code is pushed to the master branch
+  access_key_id: "$AWS_ACCESS_KEY"                                 # Travis CI Environment Variable
+  aecret_access_key: "$AWS_SECRET_KEY"                             # Travis CI Environment Variable
