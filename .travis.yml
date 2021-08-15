@@ -24,6 +24,7 @@ after_success:
   - docker push ozekidesu/multi-server
   - docker push ozekidesu/multi-worker
 
+### Recreated Env
 deploy:
   provider: elasticbeanstalk
   region: "us-east-1"                                              # Elastic Beanstalk Url Region
